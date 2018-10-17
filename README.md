@@ -8,7 +8,7 @@ In this lesson, we'll review all the steps we should take and all the things we 
 
 ## Objectives
 
-In this lesson, we will learn:
+You will be able to:
 
 * Cast columns to the appropriate data types
 * Identify and deal with null values appropriately
@@ -16,19 +16,19 @@ In this lesson, we will learn:
 * Check for and deal with multicollinearity
 * Normalize our data
 
-### The "Scrub" Step
+## The "Scrub" Step
 
 During the process of working with data, we'll always reach a point where we've gathered all the data we'll need (our "Obtain" step), but the data is not yet in a format where we can use it for modeling.  All the work that we'll be doing in the next lab will be to get our dataset in a format that we can easily explore and build models with. 
 
 
-### Subsampling to Reduce Size
+## Subsampling to Reduce Size
 
 When building model for predictive purposes, more data is always better when training the final model.  However, during the development process when working with large datasets, its common to work with only a subsample of the dataset.  Building a model is an iterative process--often, you fit the model, investigate the results, then train the model again with some small tweaks based on what you noticed.  Since this is an iterative process, we want to avoid long runtimes, and iterate as quickly as possible.  When we're satisfied with the model we've built on the subsample of data, then we would fit the model on the entire dataset. 
 
 In the next lab, we'll work with a subsample of the dataset to increase our iteration speed moving forward. 
 
 
-### Dealing With Data Types
+## Dealing With Data Types
 
 
 One of the most common problems we'll need to deal with during the data scrubbing step is columns that are encoded as the wrong data type. Generally, we see numeric data that is mistakenly encoded as string data (making each numeric value a category in its own right), or categorical data encoded as integer values. Both of these are problems we'll want to deal with.  
@@ -66,11 +66,11 @@ What do you notice about this dataset?  A good next step would be to look at exa
 
 It is usually also a good idea to check integer columns to ensure that the data it contains is meant to represent actual numeric data, and is not just categorical data encoded as integers.
 
-#### Numeric Data Encoded as Strings
+### Numeric Data Encoded as Strings
 
 Solving this problem is pretty straightforward--we just need to cast the string data to a numeric type.  Note that often times, the entire column is encoded as a string because of a single cell that contains a letter or non-numeric character such as a comma.  Recall that when numpy sees multiple data types in an array, it defaults to casting everything as a string. If you try to cast a column from string to numeric data types and get an error, consider checking the  unqiue values in that column--it's likely that you may have a single letter hiding out somewhere that needs to be removed!
 
-#### Categorical Data Encoded as Integers
+### Categorical Data Encoded as Integers
 
 It's also common to see categorical data encoded as integers.  Given that a big step in the data cleaning process is to convert all categorical columns to numeric equivalents, this may not seem like a problem at first glance.  However, leaving categorical data encoded as integers can have a negative effect by introducing bad information into our model. This is because integer encoding mistakenly adds mathematical relationships between the different categories--our model may mistakenly think that the category represented by the integer `4` twice as much as category `2`, and so on.  
 
@@ -86,11 +86,11 @@ df['Some_Column'] = df.['Some_column'].astype("float32")
 df['Some_Column'] = df.['Some_column'].astype("str")
 ```
 
-### Detecting and Dealing With Null Values
+## Detecting and Dealing With Null Values
 
 We also need to check for and deal with any missing values.  Recall from previous labs that pandas denotes missing values as `NaN`.
 
-#### Checking For `NaN`s
+### Checking For `NaN`s
 
 We can easily check how many missing values are contained within each column by getting having pandas create a truth table where the cells that contain `NaN` are marked as `True` and everything else is marked as `False`.
 
@@ -108,13 +108,13 @@ df.isna().sum()
 
 Recall that our dataset may also contain null values that are denoted by placeholder values.  Most datasets that do this will make mention of this in the dataset's data dictionary. However, you may also see these denoted by extreme values that dont make sense (e.g. a peron's weight being set to something like 0 or 10000).  We can detect these by checking for outliers in numeric columns.
 
-#### Dealing With Null Values
+### Dealing With Null Values
 
 Recall that we have different strategies for dealing with null values, and that null values aren't always a bad thing--sometimes, the very absence of information tells us something! 
 
 In order to build a model on the dataset, we'll have to make sure that the dataset contains no `NaN` values in any cells.  We can deal with these in the following ways:
 
-##### Removing Data
+#### Removing Data
 
 Recall that we can eliminate null values by removing the offending columns and/or rows from our dataset.
 
@@ -134,7 +134,7 @@ Recall that we can also replace null values with other values, and that the stra
 * Making Null values their own category
 * Replacing null values with the most common category 
 
-### Checking For Multicollinearity
+## Checking For Multicollinearity
 
 We may also want to check that our data does not have high multicollinearity, or correlation/covariance between our predictor columns.  
 
@@ -147,7 +147,7 @@ Columns with strong correlation should be dealt with by removing one of the offe
 The [seaborn documentation](https://seaborn.pydata.org/examples/many_pairwise_correlations.html) provides great example code on how to build a correlation heatmap with data stored in a pandas DataFrame. 
 
 
-### Normalizing our Data
+## Normalizing our Data
 
 An important step during the data cleaning process is to convert all of our data to the same scale by **_normalizing_** it.  
 
@@ -161,7 +161,7 @@ There are also other sorts of scaling methods we can use, such as **_min-max nor
 
 In practice, z-score normalization is the most widely used.  
 
-### One-Hot Encoding Categorical Data
+## One-Hot Encoding Categorical Data
 
 Usually, one of the final steps in data cleaning is converting categorical columns to numeric format through **_One-Hot Encoding_**.  
 
@@ -174,3 +174,7 @@ We can easily one-hot encode all categorical data by using the `get_dummies()` f
 ```python
 one_hot_df = pd.get_dummies(df)
 ```
+
+## Summary
+
+Great, now that we have reviewed this all, let's put this into practice!
