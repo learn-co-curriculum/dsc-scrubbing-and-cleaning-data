@@ -1,6 +1,6 @@
 
 
-# Scrubbing Our Data
+# Scrubbing and Cleaning Data
 
 
 ## Introduction
@@ -19,24 +19,22 @@ You will be able to:
 
 ## The "Scrub" Step
 
-During the process of working with data, we'll always reach a point where we've gathered all the data we'll need (our "Obtain" step), but the data is not yet in a format where we can use it for modeling.  All the work that we'll be doing in the next lab will be to get our dataset in a format that we can easily explore and build models with. 
+During the process of working with data, you'll always reach a point where you've gathered all the data you'll need (our "Obtain" step), but the data is not yet in a format where you can use it for modeling.  All the work that you'll be doing in the next lab will be to get the dataset in a format that you can easily explore and build models with. 
 
 
 ## Subsampling to Reduce Size
 
-When building a model for predictive purposes, more data is always better when training the final model.  However, during the development process when working with large datasets, it is common to work with only a subsample of the dataset.  Building a model is an iterative process--often, you fit the model, investigate the results, then train the model again with some small tweaks based on what you noticed.  Since this is an iterative process, we want to avoid long runtimes, and iterate as quickly as possible.  When we're satisfied with the model we've built on the subsample of data, then we would fit the model on the entire dataset. 
+When building a model for predictive purposes, more data is always better when training the final model.  However, during the development process when working with large datasets, it is common to work with only a subsample of the dataset.  Building a model is an iterative process--often, you fit the model, investigate the results, then train the model again with some small tweaks based on what you noticed.  Since this is an iterative process, you want to avoid long runtimes, and iterate as quickly as possible.  When you're satisfied with the model you've built on the subsample of data, then you would fit the model on the entire dataset. 
 
-In the next lab, we'll work with a subsample of the dataset to increase our iteration speed moving forward. 
+In the next lab, you'll work with a subsample of the dataset to increase the iteration speed in refining your model. 
 
 
 ## Dealing With Data Types
 
 
-One of the most common problems we'll need to deal with during the data scrubbing step is columns that are encoded as the wrong data type. Generally, we see numeric data that is mistakenly encoded as string data (making each numeric value a category in its own right), or categorical data encoded as integer values. Both of these are problems we'll want to deal with.  
+One of the most common problems you'll need to deal with during the data scrubbing step is columns that are encoded as the wrong data type. For example, a common formatting issue you may encounter is numeric data that is mistakenly encoded as string data. This makes numerical operations on the data impossible without first reformatting the data. A simple operation such as `2 + 2` will return `22` if the numeric data is accidently formatted as strings (`'2'+'2'='22'`). Similarly, categorical data is often encoded as integer values. If you don't properly conceptualize how the data is represented, you will fail to formulate meaningful models and insights.
 
-Before we can deal with these sorts of problems, we need to detect them first. 
-
-Recall that we can get a print out of metadata for our DataFrame by calling `df.info()`.  This will tell what type of data each column contains, as well as the number of values contained within that column (which can also help us identify columns that contain missing data)!  Take a look at this example output from `df.info()` that we'll see in the next lab:
+A first step to uncover and investigate such issues is to use the `.info()` method available for all pandas DataFrames. This will tell what type of data each column contains, as well as the number of values contained within that column (which can also help us identify columns that contain missing data)!  Here's an example response:
 
 ```
 <class 'pandas.core.frame.DataFrame'>
@@ -63,13 +61,30 @@ memory usage: 12.0+ MB
 
 ```
 
-What do you notice about this dataset?  A good next step would be to look at examples from each column encoded as strings (remember, pandas refers to string columns as `object`) and confirm that this data is supposed to be encoded as strings.  
+From here, a good next step would be to look at examples from each column encoded as strings (remember, pandas refers to string columns as `object`) and confirm that this data is supposed to be encoded as strings. One method to do this is to preview a truncated version of the output from `.value_counts()`. For example, you could preview the 5 most frequent entries from each column with a simple loop like this:  
 
-It is usually also a good idea to check integer columns to ensure that the data it contains is meant to represent actual numeric data, and is not just categorical data encoded as integers.
+```python
+for col in df.columns:
+    try:
+        print(col, df[col].value_counts()[:5])
+    except:
+        print(col, df[col].value_counts())
+        #If there aren't 5+ unique values for a column the first print statement
+        #will throw an error for an invalid idx slice
+    print('\n') #Break up the output between columns
+```
+
+It is usually also a good idea to check integer columns to ensure that the data it contains is meant to represent actual numeric data, and is not just categorical data encoded as integers. You may also uncover null values hard coded as strings such as `"?"`, `"999999"` or other extraneous values depending on the dataset and who created it.
 
 ### Numeric Data Encoded as Strings
 
-Solving this problem is pretty straightforward--we just need to cast the string data to a numeric type.  Note that often times, the entire column is encoded as a string because of a single cell that contains a letter or non-numeric character such as a comma.  Recall that when NumPy sees multiple data types in an array, it defaults to casting everything as a string. If you try to cast a column from string to numeric data types and get an error, consider checking the unique values in that column--it's likely that you may have a single letter hiding out somewhere that needs to be removed!
+If you've identified numeric data encoded as strings, it's typically a pretty easy problem to solve. Often it's as simple as casting the string data to a numeric type:
+
+```python
+df['numeric_string_col'] = df['numeric_string_col'].astype('float')
+```
+
+Sadly, it's not always that simple. For example, if there is even a single cell that contains a letter or non-numeric character such as a comma or monetary symbol ($) the above statement will fail. In such cases, a more complex cleaning function must be manually created. This could involve stripping extraneous symbols such as ```',$%'``` or simply casting non convertable strings as null. Recall that when NumPy sees multiple data types in an array, it defaults to casting everything as a string. If you try to cast a column from string to numeric data types and get an error, consider checking the unique values in that column--it's likely that you may have a single letter hiding out somewhere that needs to be removed!
 
 ### Categorical Data Encoded as Integers
 
@@ -87,9 +102,11 @@ df['Some_Column'] = df.['Some_column'].astype("float32")
 df['Some_Column'] = df.['Some_column'].astype("str")
 ```
 
+Once done, it is then common to pass these categorical variables to another method such as `pd.get_dummies` in order to transform these features into representations that are more suitable for machine learning algorithms.
+
 ## Detecting and Dealing With Null Values
 
-We also need to check for and deal with any missing values.  Recall from previous labs that pandas denotes missing values as `NaN`.
+Another important data cleaning check is to inspect for missing or null values. Recall from previous labs that pandas denotes missing values as `NaN`.
 
 ### Checking For `NaN`s
 
@@ -100,32 +117,18 @@ You can easily check how many missing values are contained within each column by
 df.isna()
 ```
 
-Since `False=0` and `True=1` in programming, we can then `sum()` these truth tables to get a column-by-column count of the number of missing values in the dataset. 
+Since `False=0` and `True=1` in programming, you can then `sum()` these truth tables to get a column-by-column count of the number of missing values in the dataset. 
 
 ```python 
 # Check how many missing values in each column
 df.isna().sum()
 ```
 
-Recall that our dataset may also contain null values that are denoted by placeholder values.  Most datasets that do this will make mention of this in the dataset's data dictionary. However, you may also see these denoted by extreme values that don't make sense (e.g. a person's weight being set to something like 0 or 10000).  We can detect these by checking for outliers in numeric columns.
+As noted above, remember that you dataset may also contain null values that are denoted by placeholder values.  Most datasets that do this will make mention of this in the dataset's data dictionary. However, you may also see these denoted by extreme values that don't make sense (e.g. a person's weight being set to something like 0 or 10000).  Doing a quick manually inspection of the top values for each feature is often the only manner to detect such anomolies.
 
 ### Dealing With Null Values
 
-Recall that we have different strategies for dealing with null values, and that null values aren't always a bad thing--sometimes, the very absence of information tells us something! 
-
-In order to build a model on the dataset, we'll have to make sure that the dataset contains no `NaN` values in any cells.  We can deal with these in the following ways:
-
-#### Removing Data
-
-Recall that we can eliminate null values by removing the offending columns and/or rows from our dataset.
-
-**_-Removing Data-_**
-* Drop rows that contain null values, if there aren't many and we are still left with a lot of good data
-* Drop columns that contain a disproportionate amount of null values. 
-
-#### Replacing Data
-
-Recall that we can also replace null values with other values and that the strategies for doing so depend on the type of data in question:
+There are several options for dealing with null values. You can always remove observation rows with missing values or similarly remove features with excessive sparisity caused by null values. That said, doing so throws away potentially valueable information. There may be important reasons why said information is missing. Despite this, many machine learning algorithms will not tolerate null values and as such you either have to impute values or drop the data. Some options you have for imputing data include:
 
 **_-Numeric Data-_**
 * Replacing Nulls with column median
@@ -137,18 +140,18 @@ Recall that we can also replace null values with other values and that the strat
 
 ## Checking For Multicollinearity
 
-We may also want to check that our data does not have high multicollinearity or correlation/covariance between our predictor columns.  
+Before proceeding to modeling, you also want to check that the data does not have high multicollinearity or correlation/covariance between predictor columns.  
 
 The easiest way to do this to build and interpret a correlation heatmap with the `seaborn` package
 
 <img src='images/heatmap.png'>
 
-Columns with strong correlation should be dealt with by removing one of the offending columns, or by combining the columns through feature engineering (more on this later in the curriculum).  
+Columns with strong correlation should be dealt with by removing one of the offending columns, or by combining the columns through feature engineering (more on this later in the curriculum). After all, highly correlated features makes feature weights unstable and also impede model interpretability. That said, they are not apt to reduce model performance if that is the sole consideration.
 
 The [seaborn documentation](https://seaborn.pydata.org/examples/many_pairwise_correlations.html) provides a great example code on how to build a correlation heatmap with data stored in a pandas DataFrame. 
 
 
-## Normalizing our Data
+## Normalizing Data
 
 An important step during the data cleaning process is to convert all of our data to the same scale by **_normalizing_** it.  
 
@@ -162,21 +165,7 @@ There are also other sorts of scaling methods we can use, such as **_min-max nor
 
 In practice, z-score normalization is the most widely used.  
 
-## One-Hot Encoding Categorical Data
-
-Usually, one of the final steps in data cleaning is converting categorical columns to numeric format through **_One-Hot Encoding_**.  
-
-<img src="images/one-hot.png">
-
-Note that you may want to begin some parts of the Data Exploration process before one-hot encoding your data, as it's often much simpler to create visualizations when working with categorical data that has not been one-hot encoded. 
-
-We can easily one-hot encode all categorical data by using the `get_dummies()` function provided by pandas:
-
-```python
-one_hot_df = pd.get_dummies(df)
-```
 
 ## Summary
 
-Great, now that we have reviewed this all, let's put this into practice!
-
+Shew! That was quite a bit! There's a lot to consider when cleaning your data. Be sure to stay on your toes and try to wrap your head around the context of data; does the current representation seem sensible? Are there any anomalies within it? Cleaning data is always a tricky process and while aspects can be fairly standard, having an inquisitive approach goes a long way.
