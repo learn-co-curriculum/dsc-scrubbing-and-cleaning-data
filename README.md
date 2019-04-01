@@ -1,10 +1,11 @@
 
+
 # Scrubbing Our Data
 
 
 ## Introduction
 
-In this lesson, we'll review all the steps we should take and all the things we should focus on when scrubbing our data.
+In this lesson, you'll review common issues to focus on when scrubbing and cleaning data.
 
 ## Objectives
 
@@ -23,7 +24,7 @@ During the process of working with data, we'll always reach a point where we've 
 
 ## Subsampling to Reduce Size
 
-When building model for predictive purposes, more data is always better when training the final model.  However, during the development process when working with large datasets, its common to work with only a subsample of the dataset.  Building a model is an iterative process--often, you fit the model, investigate the results, then train the model again with some small tweaks based on what you noticed.  Since this is an iterative process, we want to avoid long runtimes, and iterate as quickly as possible.  When we're satisfied with the model we've built on the subsample of data, then we would fit the model on the entire dataset. 
+When building a model for predictive purposes, more data is always better when training the final model.  However, during the development process when working with large datasets, it is common to work with only a subsample of the dataset.  Building a model is an iterative process--often, you fit the model, investigate the results, then train the model again with some small tweaks based on what you noticed.  Since this is an iterative process, we want to avoid long runtimes, and iterate as quickly as possible.  When we're satisfied with the model we've built on the subsample of data, then we would fit the model on the entire dataset. 
 
 In the next lab, we'll work with a subsample of the dataset to increase our iteration speed moving forward. 
 
@@ -68,7 +69,7 @@ It is usually also a good idea to check integer columns to ensure that the data 
 
 ### Numeric Data Encoded as Strings
 
-Solving this problem is pretty straightforward--we just need to cast the string data to a numeric type.  Note that often times, the entire column is encoded as a string because of a single cell that contains a letter or non-numeric character such as a comma.  Recall that when numpy sees multiple data types in an array, it defaults to casting everything as a string. If you try to cast a column from string to numeric data types and get an error, consider checking the  unqiue values in that column--it's likely that you may have a single letter hiding out somewhere that needs to be removed!
+Solving this problem is pretty straightforward--we just need to cast the string data to a numeric type.  Note that often times, the entire column is encoded as a string because of a single cell that contains a letter or non-numeric character such as a comma.  Recall that when NumPy sees multiple data types in an array, it defaults to casting everything as a string. If you try to cast a column from string to numeric data types and get an error, consider checking the unique values in that column--it's likely that you may have a single letter hiding out somewhere that needs to be removed!
 
 ### Categorical Data Encoded as Integers
 
@@ -92,10 +93,10 @@ We also need to check for and deal with any missing values.  Recall from previou
 
 ### Checking For `NaN`s
 
-We can easily check how many missing values are contained within each column by getting having pandas create a truth table where the cells that contain `NaN` are marked as `True` and everything else is marked as `False`.
+You can easily check how many missing values are contained within each column by having pandas create a truth table where the cells that contain `NaN` are marked as `True` and everything else is marked as `False`.
 
 ```python
-# Create truth table for missing values
+# Create a truth table for missing values
 df.isna()
 ```
 
@@ -106,7 +107,7 @@ Since `False=0` and `True=1` in programming, we can then `sum()` these truth tab
 df.isna().sum()
 ```
 
-Recall that our dataset may also contain null values that are denoted by placeholder values.  Most datasets that do this will make mention of this in the dataset's data dictionary. However, you may also see these denoted by extreme values that dont make sense (e.g. a peron's weight being set to something like 0 or 10000).  We can detect these by checking for outliers in numeric columns.
+Recall that our dataset may also contain null values that are denoted by placeholder values.  Most datasets that do this will make mention of this in the dataset's data dictionary. However, you may also see these denoted by extreme values that don't make sense (e.g. a person's weight being set to something like 0 or 10000).  We can detect these by checking for outliers in numeric columns.
 
 ### Dealing With Null Values
 
@@ -119,12 +120,12 @@ In order to build a model on the dataset, we'll have to make sure that the datas
 Recall that we can eliminate null values by removing the offending columns and/or rows from our dataset.
 
 **_-Removing Data-_**
-* Drop rows that contain null values, if there aren't many and we are still left with alot of good data
+* Drop rows that contain null values, if there aren't many and we are still left with a lot of good data
 * Drop columns that contain a disproportionate amount of null values. 
 
 #### Replacing Data
 
-Recall that we can also replace null values with other values, and that the strategies for doing so depend on the type of the data in question:
+Recall that we can also replace null values with other values and that the strategies for doing so depend on the type of data in question:
 
 **_-Numeric Data-_**
 * Replacing Nulls with column median
@@ -136,15 +137,15 @@ Recall that we can also replace null values with other values, and that the stra
 
 ## Checking For Multicollinearity
 
-We may also want to check that our data does not have high multicollinearity, or correlation/covariance between our predictor columns.  
+We may also want to check that our data does not have high multicollinearity or correlation/covariance between our predictor columns.  
 
 The easiest way to do this to build and interpret a correlation heatmap with the `seaborn` package
 
-<img src='heatmap.png'>
+<img src='images/heatmap.png'>
 
 Columns with strong correlation should be dealt with by removing one of the offending columns, or by combining the columns through feature engineering (more on this later in the curriculum).  
 
-The [seaborn documentation](https://seaborn.pydata.org/examples/many_pairwise_correlations.html) provides great example code on how to build a correlation heatmap with data stored in a pandas DataFrame. 
+The [seaborn documentation](https://seaborn.pydata.org/examples/many_pairwise_correlations.html) provides a great example code on how to build a correlation heatmap with data stored in a pandas DataFrame. 
 
 
 ## Normalizing our Data
@@ -153,11 +154,11 @@ An important step during the data cleaning process is to convert all of our data
 
 The most common form of data normalization is by converting data to z-scores.
 
-<img src='z-score.png'>
+<img src='images/z-score.png'>
 
 There are also other sorts of scaling methods we can use, such as **_min-max normalization_**:
 
-<img src='min-max.png'>
+<img src='images/min-max.png'>
 
 In practice, z-score normalization is the most widely used.  
 
@@ -165,7 +166,7 @@ In practice, z-score normalization is the most widely used.
 
 Usually, one of the final steps in data cleaning is converting categorical columns to numeric format through **_One-Hot Encoding_**.  
 
-<img src="one-hot.png">
+<img src="images/one-hot.png">
 
 Note that you may want to begin some parts of the Data Exploration process before one-hot encoding your data, as it's often much simpler to create visualizations when working with categorical data that has not been one-hot encoded. 
 
@@ -178,3 +179,4 @@ one_hot_df = pd.get_dummies(df)
 ## Summary
 
 Great, now that we have reviewed this all, let's put this into practice!
+
