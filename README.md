@@ -102,7 +102,7 @@ df['Some_Column'] = df.['Some_column'].astype("float32")
 df['Some_Column'] = df.['Some_column'].astype("str")
 ```
 
-Once done, it is then common to pass these categorical variables to another method such as `pd.get_dummies` in order to transform these features into representations that are more suitable for machine learning algorithms.
+Once done, it is then common to pass these categorical variables to another method such as `pd.get_dummies` in order to transform these features into representations that are more suitable for machine learning algorithms. It may be necessary to drop the first dummy to avoid the dummy variable trap.
 
 ## Detecting and Dealing With Null Values
 
