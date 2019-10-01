@@ -24,7 +24,7 @@ During the process of working with data, you'll always reach a point where you'v
 
 ## Subsampling to Reduce Size
 
-When building a model for predictive purposes, more data is always better when training the final model.  However, during the development process when working with large datasets, it is common to work with only a subsample of the dataset.  Building a model is an iterative process--often, you fit the model, investigate the results, then train the model again with some small tweaks based on what you noticed.  Since this is an iterative process, you want to avoid long runtimes, and iterate as quickly as possible.  When you're satisfied with the model you've built on the subsample of data, then you would fit the model on the entire dataset. 
+When building a model for predictive purposes, more data is always better when training the final model. However, during the development process when working with large datasets, it is common to work with only a subsample of the dataset. Building a model is an iterative process -- often, you fit the model, investigate the results, then train the model again with some small tweaks based on what you noticed.  Since this is an iterative process, you want to avoid long runtimes, and iterate as quickly as possible.  When you're satisfied with the model you've built on the subsample of data, then you would fit the model on the entire dataset. 
 
 In the next lab, you'll work with a subsample of the dataset to increase the iteration speed in refining your model. 
 
@@ -69,9 +69,9 @@ for col in df.columns:
         print(col, df[col].value_counts()[:5])
     except:
         print(col, df[col].value_counts())
-        #If there aren't 5+ unique values for a column the first print statement
-        #will throw an error for an invalid idx slice
-    print('\n') #Break up the output between columns
+        # If there aren't 5+ unique values for a column the first print statement
+        # will throw an error for an invalid idx slice
+    print('\n') # Break up the output between columns
 ```
 
 It is usually also a good idea to check integer columns to ensure that the data it contains is meant to represent actual numeric data, and is not just categorical data encoded as integers. You may also uncover null values hard coded as strings such as `"?"`, `"999999"` or other extraneous values depending on the dataset and who created it.
@@ -84,25 +84,25 @@ If you've identified numeric data encoded as strings, it's typically a pretty ea
 df['numeric_string_col'] = df['numeric_string_col'].astype('float')
 ```
 
-Sadly, it's not always that simple. For example, if there is even a single cell that contains a letter or non-numeric character such as a comma or monetary symbol ($) the above statement will fail. In such cases, a more complex cleaning function must be manually created. This could involve stripping extraneous symbols such as ```',$%'``` or simply casting non convertible strings as null. Recall that when NumPy sees multiple data types in an array, it defaults to casting everything as a string. If you try to cast a column from string to numeric data types and get an error, consider checking the unique values in that column--it's likely that you may have a single letter hiding out somewhere that needs to be removed!
+Sadly, it's not always that simple. For example, if there is even a single cell that contains a letter or non-numeric character such as a comma or monetary symbol ($) the above statement will fail. In such cases, a more complex cleaning function must be manually created. This could involve stripping extraneous symbols such as ',/$/%',  or simply casting non convertible strings as null. Recall that when NumPy sees multiple data types in an array, it defaults to casting everything as a string. If you try to cast a column from string to numeric data types and get an error, consider checking the unique values in that column -- it's likely that you may have a single letter hiding out somewhere that needs to be removed!
 
 ### Categorical Data Encoded as Integers
 
-It's also common to see categorical data encoded as integers.  Given that a big step in the data cleaning process is to convert all categorical columns to numeric equivalents, this may not seem like a problem at first glance.  However, leaving categorical data encoded as integers can have a negative effect by introducing bad information into our model. This is because integer encoding mistakenly adds mathematical relationships between the different categories--our model may mistakenly think that the category represented by the integer `4` twice as much as category `2`, and so on.  
+It's also common to see categorical data encoded as integers.  Given that a big step in the data cleaning process is to convert all categorical columns to numeric equivalents, this may not seem like a problem at first glance.  However, leaving categorical data encoded as integers can have a negative effect by introducing bad information into our model. This is because integer encoding mistakenly adds mathematical relationships between the different categories -- our model may mistakenly think that the category represented by the integer `4` twice as much as category `2`, and so on.  
 
-The best way of dealing with this problem is to cast the entire column to a string data type, which will better represent the column's categorical nature.  Since it's categorical, we will then deal with correctly when we one-hot encode categorical data later in the process.
+The best way of dealing with this problem is to cast the entire column to a string data type, which will better represent the column's categorical nature. Since it's categorical, we can correctly deal with it when we one-hot encode categorical data later in the process.
 
 The following example shows the syntax necessary for converting a column from one data type to another:
 
 ```python
 # Cast to a numeric type
-df['Some_Column'] = df.['Some_column'].astype("float32")
+df['some_column'] = df.['some_column'].astype('float32')
 
 # Cast back to a string type
-df['Some_Column'] = df.['Some_column'].astype("str")
+df['some_column'] = df.['some_column'].astype('str')
 ```
 
-Once done, it is then common to pass these categorical variables to another method such as `pd.get_dummies` in order to transform these features into representations that are more suitable for machine learning algorithms. It may be necessary to drop the first dummy to avoid the dummy variable trap.
+Once done, it is then common to pass these categorical variables to another function such as `pd.get_dummies()` in order to transform these features into representations that are more suitable for machine learning algorithms. It may be necessary to drop the first dummy to avoid the dummy variable trap.
 
 ## Detecting and Dealing With Null Values
 
@@ -124,17 +124,17 @@ Since `False=0` and `True=1` in programming, you can then `sum()` these truth ta
 df.isna().sum()
 ```
 
-As noted above, remember that you dataset may also contain null values that are denoted by placeholder values.  Most datasets that do this will make mention of this in the dataset's data dictionary. However, you may also see these denoted by extreme values that don't make sense (e.g. a person's weight being set to something like 0 or 10000).  Doing a quick manually inspection of the top values for each feature is often the only manner to detect such anomalies.
+As noted above, remember that your dataset may also contain null values that are denoted by placeholder values.  Most datasets that do this will make mention of this in the dataset's data dictionary. However, you may also see these denoted by extreme values that don't make sense (e.g. a person's weight being set to something like 0 or 10000).  Doing a quick manual inspection of the top values for each feature is often the only manner to detect such anomalies.
 
 ### Dealing With Null Values
 
 There are several options for dealing with null values. You can always remove observation rows with missing values or similarly remove features with excessive sparsity caused by null values. That said, doing so throws away potentially valuable information. There may be important reasons why said information is missing. Despite this, many machine learning algorithms will not tolerate null values and as such you either have to impute values or drop the data. Some options you have for imputing data include:
 
-**_-Numeric Data-_**
+**_Numeric Data_**
 * Replacing Nulls with column median
 * Binning data and converting columns to categorical format (_Coarse Classification)_
 
-**_-Categorical Data-_**
+**_Categorical Data_**
 * Making Null values their own category
 * Replacing null values with the most common category 
 
@@ -142,7 +142,7 @@ There are several options for dealing with null values. You can always remove ob
 
 Before proceeding to modeling, you also want to check that the data does not have high multicollinearity or correlation/covariance between predictor columns.  
 
-The easiest way to do this to build and interpret a correlation heatmap with the `seaborn` package
+The easiest way to do this to build and interpret a correlation heatmap with the `seaborn` package. 
 
 <img src='images/heatmap.png'>
 
@@ -162,7 +162,7 @@ $$ \Large z= \dfrac{x-\mu}{\sigma}$$
 $$ \large \mu = \text{Mean}$$
 $$ \large \sigma = \text{Standard Deviation}$$
 
-There are also other sorts of scaling methods we can use, such as **_min-max normalization_**:
+There are also other sorts of scaling methods we can use, such as **_Min-Max normalization_**:
 
 $$\large z= \dfrac{x-\min(x)}{\max(x)-\min(x)}$$
 
