@@ -90,7 +90,7 @@ Sadly, it's not always that simple. For example, if there is even a single cell 
 
 It's also common to see categorical data encoded as integers.  Given that a big step in the data cleaning process is to convert all categorical columns to numeric equivalents, this may not seem like a problem at first glance.  However, leaving categorical data encoded as integers can have a negative effect by introducing bad information into our model. This is because integer encoding mistakenly adds mathematical relationships between the different categories -- our model may mistakenly think that the category represented by the integer `4` twice as much as category `2`, and so on.  
 
-The best way of dealing with this problem is to cast the entire column to a string data type, which will better represent the column's categorical nature.  Since it's categorical, we will then deal correctly when we one-hot encode categorical data later in the process.
+The best way of dealing with this problem is to cast the entire column to a string data type, which will better represent the column's categorical nature. Since it's categorical, we can correctly deal with it when we one-hot encode categorical data later in the process.
 
 The following example shows the syntax necessary for converting a column from one data type to another:
 
