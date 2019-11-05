@@ -11,11 +11,9 @@ In this lesson, you'll review common issues to focus on when scrubbing and clean
 
 You will be able to:
 
-* Cast columns to the appropriate data types
+* Cast columns to appropriate data types
 * Identify and deal with null values appropriately
 * Remove unnecessary columns
-* Check for and deal with multicollinearity
-* Normalize our data
 
 ## The "Scrub" Step
 
@@ -34,7 +32,7 @@ In the next lab, you'll work with a subsample of the dataset to increase the ite
 
 One of the most common problems you'll need to deal with during the data scrubbing step is columns that are encoded as the wrong data type. For example, a common formatting issue you may encounter is numeric data that is mistakenly encoded as string data. This makes numerical operations on the data impossible without first reformatting the data. A simple operation such as `2 + 2` will return `22` if the numeric data is accidentally formatted as strings (`'2'+'2'='22'`). Similarly, categorical data is often encoded as integer values. If you don't properly conceptualize how the data is represented, you will fail to formulate meaningful models and insights.
 
-A first step to uncover and investigate such issues is to use the `.info()` method available for all pandas DataFrames. This will tell what type of data each column contains, as well as the number of values contained within that column (which can also help us identify columns that contain missing data)!  Here's an example response:
+A first step to uncover and investigate such issues is to use the `.info()` method available for all Pandas DataFrames. This will tell what type of data each column contains, as well as the number of values contained within that column (which can also help us identify columns that contain missing data)!  Here's an example response:
 
 ```
 <class 'pandas.core.frame.DataFrame'>
@@ -61,7 +59,7 @@ memory usage: 12.0+ MB
 
 ```
 
-From here, a good next step would be to look at examples from each column encoded as strings (remember, pandas refers to string columns as `object`) and confirm that this data is supposed to be encoded as strings. One method to do this is to preview a truncated version of the output from `.value_counts()`. For example, you could preview the 5 most frequent entries from each column with a simple loop like this:  
+From here, a good next step would be to look at examples from each column encoded as strings (remember, Pandas refers to string columns as `object`) and confirm that this data is supposed to be encoded as strings. One method to do this is to preview a truncated version of the output from `.value_counts()`. For example, you could preview the 5 most frequent entries from each column with a simple loop like this:  
 
 ```python
 for col in df.columns:
@@ -106,11 +104,11 @@ Once done, it is then common to pass these categorical variables to another func
 
 ## Detecting and Dealing With Null Values
 
-Another important data cleaning check is to inspect for missing or null values. Recall from previous labs that pandas denotes missing values as `NaN`.
+Another important data cleaning check is to inspect for missing or null values. Recall from previous labs that Pandas denotes missing values as `NaN`.
 
 ### Checking For `NaN`s
 
-You can easily check how many missing values are contained within each column by having pandas create a truth table where the cells that contain `NaN` are marked as `True` and everything else is marked as `False`.
+You can easily check how many missing values are contained within each column by having Pandas create a truth table where the cells that contain `NaN` are marked as `True` and everything else is marked as `False`.
 
 ```python
 # Create a truth table for missing values
@@ -131,12 +129,14 @@ As noted above, remember that your dataset may also contain null values that are
 There are several options for dealing with null values. You can always remove observation rows with missing values or similarly remove features with excessive sparsity caused by null values. That said, doing so throws away potentially valuable information. There may be important reasons why said information is missing. Despite this, many machine learning algorithms will not tolerate null values and as such you either have to impute values or drop the data. Some options you have for imputing data include:
 
 **_Numeric Data_**
-* Replacing Nulls with column median
-* Binning data and converting columns to categorical format (_Coarse Classification)_
+* Replacing Nulls with the column median
+* Binning the data and converting columns to a categorical format (_Coarse Classification)_
 
 **_Categorical Data_**
 * Making Null values their own category
 * Replacing null values with the most common category 
+
+As a data scientist, you will have to decide which method of imputation is appropriate for your particular data set and business objective.
 
 ## Checking For Multicollinearity
 
@@ -148,14 +148,14 @@ The easiest way to do this to build and interpret a correlation heatmap with the
 
 Columns with strong correlation should be dealt with by removing one of the offending columns, or by combining the columns through feature engineering (more on this later in the curriculum). After all, highly correlated features makes feature weights unstable and also impede model interpretability. That said, they are not apt to reduce model performance if that is the sole consideration.
 
-The [seaborn documentation](https://seaborn.pydata.org/examples/many_pairwise_correlations.html) provides a great example code on how to build a correlation heatmap with data stored in a pandas DataFrame. 
+The [seaborn documentation](https://seaborn.pydata.org/examples/many_pairwise_correlations.html) provides a great example code on how to build a correlation heatmap with data stored in a Pandas DataFrame. 
 
 
 ## Normalizing Data
 
 An important step during the data cleaning process is to convert all of our data to the same scale by **_normalizing_** it.  
 
-The most common form of data normalization is by converting data to z-scores.
+The most common form of data normalization is by converting data to z-scores. This is commonly referred to as standardization.
 
 $$ \Large z= \dfrac{x-\mu}{\sigma}$$
 
@@ -171,4 +171,4 @@ In practice, z-score normalization is the most widely used.
 
 ## Summary
 
-Shew! That was quite a bit! There's a lot to consider when cleaning your data. Be sure to stay on your toes and try to wrap your head around the context of data; does the current representation seem sensible? Are there any anomalies within it? Cleaning data is always a tricky process and while aspects can be fairly standard, having an inquisitive approach goes a long way.
+Shew! That was quite a bit! There's a lot to consider when cleaning your data. Here, you explored casting data to the appropriate data types, identifying and correcting null values, and removing features that exhibit multi-collinearity. While applying this workflow, be sure to stay on your toes and try to wrap your head around the context of the data: Does the current representation seem sensible? Are there any anomalies within it? Cleaning data is always a tricky process and while aspects can be fairly standard, having an inquisitive approach goes a long way.
