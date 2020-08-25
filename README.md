@@ -82,7 +82,7 @@ If you've identified numeric data encoded as strings, it's typically a pretty ea
 df['numeric_string_col'] = df['numeric_string_col'].astype('float')
 ```
 
-Sadly, it's not always that simple. For example, if there is even a single cell that contains a letter or non-numeric character such as a comma or monetary symbol ($) the above statement will fail. In such cases, a more complex cleaning function must be manually created. This could involve stripping extraneous symbols such as ',/$/%',  or simply casting non convertible strings as null. Recall that when NumPy sees multiple data types in an array, it defaults to casting everything as a string. If you try to cast a column from string to numeric data types and get an error, consider checking the unique values in that column -- it's likely that you may have a single letter hiding out somewhere that needs to be removed!
+Sadly, it's not always that simple. For example, if there is even a single cell that contains a letter or non-numeric character such as a comma or monetary symbol ($) the above statement will fail. In such cases, a more complex cleaning function must be manually created. This could involve stripping extraneous symbols such as ',$/%',  or simply casting non convertible strings as null. Recall that when NumPy sees multiple data types in an array, it defaults to casting everything as a string. If you try to cast a column from string to numeric data types and get an error, consider checking the unique values in that column -- it's likely that you may have a single letter hiding out somewhere that needs to be removed!
 
 ### Categorical Data Encoded as Integers
 
@@ -157,18 +157,17 @@ An important step during the data cleaning process is to convert all of our data
 
 The most common form of data normalization is by converting data to z-scores. This is commonly referred to as standardization.
 
-$$ \Large z= \dfrac{x-\mu}{\sigma}$$
-
-$$ \large \mu = \text{Mean}$$
-$$ \large \sigma = \text{Standard Deviation}$$
+ <img src="https://render.githubusercontent.com/render/math?math=z= \dfrac{x-\mu}{\sigma}"> 
+<br>
+ <img src="https://render.githubusercontent.com/render/math?math=\mu = \text{Mean}"> 
+<br>
+ <img src="https://render.githubusercontent.com/render/math?math=\sigma = \text{Standard Deviation}"> 
 
 There are also other sorts of scaling methods we can use, such as **_Min-Max normalization_**:
 
-$$\large z= \dfrac{x-\min(x)}{\max(x)-\min(x)}$$
-
-In practice, z-score normalization is the most widely used.  
+ <img src="https://render.githubusercontent.com/render/math?math=z= \dfrac{x-\min(x)}{\max(x)-\min(x)}"> 
 
 
 ## Summary
 
-Shew! That was quite a bit! There's a lot to consider when cleaning your data. Here, you explored casting data to the appropriate data types, identifying and correcting null values, and removing features that exhibit multi-collinearity. While applying this workflow, be sure to stay on your toes and try to wrap your head around the context of the data: Does the current representation seem sensible? Are there any anomalies within it? Cleaning data is always a tricky process and while aspects can be fairly standard, having an inquisitive approach goes a long way.
+Phew! That was quite a bit! There's a lot to consider when cleaning your data. Here, you explored casting data to the appropriate data types, identifying and correcting null values, and removing features that exhibit multi-collinearity. While applying this workflow, be sure to stay on your toes and try to wrap your head around the context of the data: Does the current representation seem sensible? Are there any anomalies within it? Cleaning data is always a tricky process and while aspects can be fairly standard, having an inquisitive approach goes a long way.
