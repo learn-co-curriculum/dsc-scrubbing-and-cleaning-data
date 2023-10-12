@@ -1,5 +1,3 @@
-
-
 # Scrubbing and Cleaning Data
 
 
@@ -144,7 +142,7 @@ Before proceeding to modeling, you also want to check that the data does not hav
 
 The easiest way to do this to build and interpret a correlation heatmap with the `seaborn` package. 
 
-<img src='images/heatmap.png'>
+<img src='https://curriculum-content.s3.amazonaws.com/data-science/images/heatmap.png'>
 
 Columns with strong correlation should be dealt with by removing one of the offending columns, or by combining the columns through feature engineering (more on this later in the curriculum). After all, highly correlated features makes feature weights unstable and also impede model interpretability. That said, they are not apt to reduce model performance if that is the sole consideration.
 
